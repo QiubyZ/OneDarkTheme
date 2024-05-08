@@ -1,0 +1,9 @@
+Package: onedark
+Architecture: all
+Installed-Size: 1002
+Maintainer: rendiix <vanzdobz@gmail.com
+Version: 1.0
+Depends: git, neofetch, ncurses-utils, zsh, eza
+Homepage: https://rendiix.github.io
+Description: onedark_themes
+

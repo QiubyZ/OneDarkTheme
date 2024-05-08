@@ -1,0 +1,168 @@
+#!/bin/bash
+set -eou pipefail
+
+trap '_REVERT' ERR
+
+function _time_counter() {
+	pid=$1
+	tput civis
+	inpmsg=$(printf "%-${_lm}s" "${_inp// /%}" | sed 's/ /./g;s/%/ /g')
+	start_time="$(($(date +%s%N)/1000000))"
+	while kill -0 $pid 2> /dev/null; do
+		current_time="$(($(date +%s%N)/1000000))"
+		milidetik=$current_time-$start_time;
+		printf "\r\033[1;38;5;231m[\033[0;38;5;46m%02d:%02d:%003d\033[1;38;5;231m] \033[0;38;5;81m%.${_lm}s\033[00m " "$((milidetik/60000%60))" "$((milidetik/1000%60))" "$((milidetik%1000))" "$inpmsg"
+	done
+	wait $pid
+}
+
+function timer() {
+	if [ -z "$1" ]; then
+		shift
+		_inp="$*"
+	else
+		_inp="$1"
+		shift
+	fi
+	_lm=$(($(tput cols)- 20))
+	(sleep 0.05; "$@") &
+	_time_counter $!
+	local _status=$?
+	case $_status in
+		0)
+			echo -e "\033[32m✔ done\033[00m";;
+		*)
+			echo -e "\033[31m✘ fail\033[00m";;
+	esac
+	tput cnorm
+}
+
+
+_TOP=/data/data/com.termux/files
+_HOME=${_TOP}/home
+_ETC=${_TOP}/usr/etc
+_UTILS=${_TOP}/usr/share/rendiix-themes
+
+_REVERT(){
+  for f in home/.zshrc.backup home/.termux/colors.properties.backup home/.termux/termux.properties.backup usr/etc/motd.backup usr/etc/zshrc.backup usr/etc/bash.bashrc.backup; do 
+    if [ -f $f ]; then 
+      cp $f $(echo ${f/.backup/})
+    fi 
+  done
+}
+
+_BACKUP(){
+  cd $_TOP
+  timer "backing up current settings..." sleep 1
+  for f in home/.zshrc home/.termux/colors.properties home/.termux/termux.properties usr/etc/motd usr/etc/zshrc usr/etc/bash.bashrc; do 
+    if [ -f $f ]; then 
+      cp $f $f.backup
+    fi 
+  done
+
+}
+
+_SET_PROPERTIES(){
+  timer "configuring colorscheme..." sleep 1 
+  cat > ${_HOME}/.termux/colors.properties <<\EOF 
+cursor=#FFFFFF
+foreground=#abb2bf
+background=#282c34
+color0=#2c323c
+color8=#3e4452
+color1=#e06c75
+color9=#e06c75
+color2=#98c379
+color10=#98c379
+color3=#e5c07b
+color11=#e5c07b
+color4=#61afef
+color12=#61afef
+color5=#c678dd
+color13=#c678dd
+color6=#56b6c2
+color14=#56b6c2
+color7=#5c6370
+color15=#abb2bf
+EOF
+
+  timer "configuring properties..." sleep 1 
+  cat >> ${_HOME}/.termux/termux.properties <<\EOF
+terminal-cursor-blink-rate=600
+terminal-transcript-rows=50000
+terminal-cursor-style=bar
+EOF
+
+timer "changing jetbrain font..." cp $_UTILS/jetbrain.ttf ${_HOME}/.termux/font.ttf
+timer "apply changes..." termux-reload-settings
+}
+
+_SHELL(){
+
+  timer "changing default shell to zsh..." ln -f -s /data/data/com.termux/files/usr/bin/zsh ${_HOME}/.termux/shell
+  timer "cloning oh-my-zsh..." git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh ${_HOME}/.omz
+  mkdir -p ${_HOME}/.omz/custom/plugins 
+  timer "cloning plugin zsh-autosuggestions..." git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${_HOME}/.omz/custom/plugins/zsh-autosuggestions
+  timer "cloning plugin zsh-syntax-highlighting..." git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ${_HOME}/.omz/custom/plugins/zsh-syntax-highlighting
+  
+  #timer "cloning plugin fast-syntax-highlighting... " git clone https://github.com/zdharma-continuum/fast-syntax-highlighting ${_HOME}/.omz/custom/plugins/fast-syntax-highlighting
+  
+  mkdir -p ${_HOME}/.omz/custom/themes
+  timer "write rounded zsh theme..." sleep 1 
+  cat > ${_HOME}/.omz/custom/themes/rounded.zsh-theme <<\EOM
+num_dirs=3 # Use 0 for full path
+truncated_path="%F{8}%K{8}%F{4} %K{0} %F{white}%$num_dirs~%{%k%}%F{0}%f"
+background_jobs="%(1j.%F{0}%K{0}%F{3}%{%k%}%F{0}%f.)"
+non_zero_return_value="%(0?..%F{0}%K{0}%F{1}%{%k%}%F{0}%f)"
+
+# Left part of prompt
+PROMPT='$truncated_path '
+# Right part of prompt
+RPROMPT=' $background_jobs $non_zero_return_value'
+# Input in bold
+#zle_highlight=(default:italic)
+
+
+ZSH_THEME_GIT_PROMPT_PREFIX="%F{8}%K{8}%F{4} %K{0}%F{white}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{%k%}%F{0%f"
+ZSH_THEME_GIT_PROMPT_DIRTY="%F{1}*%f"
+ZSH_THEME_GIT_PROMPT_CLEAN=""
+
+EOM
+
+  timer "configure .zshrc..." sleep 1
+  cat > ${_HOME}/.zshrc <<\EOF
+ZSH_THEME='rounded'
+export ZSH=$HOME/.omz
+setopt histignorealldups
+DISABLE_UPDATE_PROMPT="true"
+#export UPDATE_ZSH_DAYS=3
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting)
+source $ZSH/oh-my-zsh.sh
+TZ=Asia/Jakarta
+alias ls='eza -l -a --icons --sort type'
+alias ll='eza --icons -l'
+alias lt='eza --icons -TL2'
+alias la='eza --icons -a'
+alias l='eza --icons -L22'
+alias q='logout'
+alias makecl="make -j80 clean && make -j80 distclean && rm -R $(pwd)/out"
+alias makein="make -j80 && make -j80 install"
+alias cls="clear"
+export PATH="$PATH:$HOME/go/bin"
+alias ml="ping 103.157.33.23"
+
+EOF
+
+}
+
+_MOTD(){
+  timer "last touch..." sleep 1
+  echo -e "\nWelcome to Termux!\n" > usr/etc/motd
+  echo -e "$(cat usr/etc/zshrc.backup)\nneofetch" >> usr/etc/zshrc
+}
+
+_BACKUP 
+_SET_PROPERTIES 
+_SHELL
+_MOTD
