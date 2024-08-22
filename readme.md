@@ -33,5 +33,5 @@ Jika mengalami neofetch yang dipanggil berulang, coba pergi ke ``` /data/data/co
 jika gagal menginstall dan menemukan masalah update dan upgrade pkg dengan packet ini, lakukan.
 
 ```sh
-sudo dpkg --remove --force-remove-reinstreq onedark
+dpkg --remove --force-remove-reinstreq onedark
 ```
