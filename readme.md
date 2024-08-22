@@ -30,8 +30,13 @@ Jika mengalami neofetch yang dipanggil berulang, coba pergi ke ``` /data/data/co
 
 ![Screenshot_2024-05-09-00-18-21-889_bin.mt.plus-edit](foto/Screenshot_2024-05-09-00-18-21-889_bin.mt.plus-edit.jpg)
 
-jika gagal menginstall dan menemukan masalah update dan upgrade pkg dengan packet ini, lakukan.
+# Warning
 
+Jika gagal menginstall dan menemukan masalah update dan upgrade pkg dengan packet ini, lakukan.
+
+```sh
+rm -rf /data/data/com.termux/files/usr/var/lib/dpkg/info/onedark*
+```
 ```sh
 dpkg --remove --force-remove-reinstreq onedark
 ```
