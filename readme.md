@@ -29,3 +29,9 @@ Required :
 Jika mengalami neofetch yang dipanggil berulang, coba pergi ke ``` /data/data/com.termux/files/usr/etc/zshrc ``` lalu jadikan seperti ini saja.
 
 ![Screenshot_2024-05-09-00-18-21-889_bin.mt.plus-edit](foto/Screenshot_2024-05-09-00-18-21-889_bin.mt.plus-edit.jpg)
+
+jika gagal menginstall dan menemukan masalah update dan upgrade pkg dengan packet ini, lakukan.
+
+```sh
+sudo dpkg --remove --force-remove-reinstreq onedark
+```
