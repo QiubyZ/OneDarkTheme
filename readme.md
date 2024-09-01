@@ -22,7 +22,7 @@ Required :
      ```
 3. lalu install menggunakan perintah
     ``` sh
-    dpkg -i "one_dark_rendixx(repack QiubyZhukhi).deb"
+    dpkg -i "onedark.deb"
     ```
 4. Exit dan buka kembali termux
 

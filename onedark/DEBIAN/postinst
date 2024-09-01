@@ -132,12 +132,15 @@ EOM
 
   timer "configure .zshrc..." sleep 1
   cat > ${_HOME}/.zshrc <<\EOF
-ZSH_THEME='rounded'
+ZSH_THEME='candy'
+termux-api-start
+export LC_ALL=en_US.UTF-8  
+export LANG=en_US.UTF-8
 export ZSH=$HOME/.omz
 setopt histignorealldups
 DISABLE_UPDATE_PROMPT="true"
 #export UPDATE_ZSH_DAYS=3
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting pip python golang)
 source $ZSH/oh-my-zsh.sh
 TZ=Asia/Jakarta
 alias ls='eza -l -a --icons --sort type'
