@@ -5,7 +5,7 @@ Kostum Tema untuk zsh termux.
 
 # Penginstalan
 Required :
-- zsh (yang telah aktif)
+- zsh (yang telah aktif) belum punya? lihat instalasi zsh [disini](https://ohmyz.sh/#install)
 - eza
 - git
 - neofetch
