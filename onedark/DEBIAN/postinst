@@ -132,7 +132,7 @@ EOM
 
   timer "configure .zshrc..." sleep 1
   cat > ${_HOME}/.zshrc <<\EOF
-ZSH_THEME='candy'
+ZSH_THEME='rounded'
 termux-api-start
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
