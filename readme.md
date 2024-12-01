@@ -15,9 +15,9 @@ Required :
 1. Clone github ini lalu masuk kedalam folder
 2. salin perintah dibawah ini:
     ``` sh
-    pkg in eza && pkg in git && pkg in neofetch && pkg in ncurses-utils
+    yes | pkg in eza git neofetch ncurses-utils zsh
      ```
-3. lalu install menggunakan perintah
+3. Download Release [onedark.deb](https://github.com/QiubyZ/OneDarkTheme/releases/tag/v1). lalu install menggunakan perintah, 
     ``` sh
     dpkg -i "onedark.deb"
     ```
