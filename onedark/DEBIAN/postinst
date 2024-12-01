@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 set -eou pipefail
 
 trap '_REVERT' ERR
