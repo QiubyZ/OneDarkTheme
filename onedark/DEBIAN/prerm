@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 _REVERT(){
   for f in home/.zshrc.backup home/.termux/colors.properties.backup home/.termux/termux.properties.backup usr/etc/motd.backup usr/etc/zshrc.backup usr/etc/bash.bashrc.backup; do 
     if [ -f $f ]; then 
