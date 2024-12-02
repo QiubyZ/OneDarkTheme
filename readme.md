@@ -12,16 +12,15 @@ Required :
 - ncurses-utils
 
 
-1. Clone github ini lalu masuk kedalam folder
-2. salin perintah dibawah ini:
+1. salin perintah dibawah ini:
     ``` sh
     yes | pkg in eza git neofetch ncurses-utils zsh
      ```
-3. Download Release [onedark.deb](https://github.com/QiubyZ/OneDarkTheme/releases/tag/v1). lalu install menggunakan perintah, 
+2. Download Release [onedark.deb](https://github.com/QiubyZ/OneDarkTheme/releases/tag/v1). lalu install menggunakan perintah, 
     ``` sh
     dpkg -i "onedark.deb"
     ```
-4. Exit dan buka kembali termux
+3. Exit dan buka kembali termux
 
 Jika mengalami neofetch yang dipanggil berulang, coba pergi ke ``` /data/data/com.termux/files/usr/etc/zshrc ``` lalu jadikan seperti ini saja.
 
